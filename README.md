@@ -5,7 +5,7 @@
 > All code is written using Python 3 using a combination of [PyTorch](https://pytorch.org/), [PyTorch Geometric](https://pytorch-geometric.readthedocs.io/en/latest/) and [PyTorch Lightning](https://pytorch-lightning.readthedocs.io/en/latest/).
 > Planned contents of this repository will be added incrementally and is underway.
 
-![](img/first-page.png)
+![](img/first_page.png)
 
 
 ##### If you found the content of this repository useful, please consider citing the paper in your work:
