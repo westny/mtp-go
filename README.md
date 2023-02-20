@@ -1,12 +1,14 @@
 # MTP-GO: Graph-Based Probabilistic Multi-Agent Trajectory Prediction with Neural ODEs
 > _mtp-go_ is a library containing the implementation for the paper: 
-> **MTP-GO: Graph-Based Probabilistic Multi-Agent Trajectory Prediction with Neural ODEs**
+> **MTP-GO: Graph-Based Probabilistic Multi-Agent Trajectory Prediction with Neural ODEs**.
 > The paper is currectly available in preprint format on ArXiv and can be accessed [here](https://arxiv.org/abs/2302.00735).
 > All code is written using Python 3 using a combination of [PyTorch](https://pytorch.org/), [PyTorch Geometric](https://pytorch-geometric.readthedocs.io/en/latest/) and [PyTorch Lightning](https://pytorch-lightning.readthedocs.io/en/latest/).
 > Planned contents of this repository will be added incrementally and is underway.
 
-![](img/first_page.png)
 
+<p align="center">
+  <img width="600" src="img/first_page.png">
+</p>
 
 ##### If you found the content of this repository useful, please consider citing the paper in your work:
 ```
