@@ -1,0 +1,14 @@
+torch==1.13.1
+numpy
+pandas
+scipy
+pytorch-lightning
+wandb
+tqdm
+pyg_lib
+torch_scatter
+torch_sparse
+torch_cluster
+torch_spline_conv
+torch_geometric
+-f https://data.pyg.org/whl/torch-1.13.1+cu117.html

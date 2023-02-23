@@ -2,7 +2,7 @@
 > _mtp-go_ is a library containing the implementation for the paper: 
 > **MTP-GO: Graph-Based Probabilistic Multi-Agent Trajectory Prediction with Neural ODEs**.
 > The paper is currectly available in preprint format on ArXiv and can be accessed [here](https://arxiv.org/abs/2302.00735).
-> All code is written using Python 3 using a combination of [PyTorch](https://pytorch.org/), [PyTorch Geometric](https://pytorch-geometric.readthedocs.io/en/latest/) and [PyTorch Lightning](https://pytorch-lightning.readthedocs.io/en/latest/).
+> All code is written using Python 3.10 using a combination of [PyTorch](https://pytorch.org/), [PyTorch Geometric](https://pytorch-geometric.readthedocs.io/en/latest/) and [PyTorch Lightning](https://pytorch-lightning.readthedocs.io/en/latest/).
 > Planned contents of this repository will be added incrementally and is underway.
 
 
@@ -38,11 +38,25 @@ UNDER UPDATE
 ## Data sets
 
 For model training and evaluation, the [highD](https://www.highd-dataset.com/), [rounD](https://www.round-dataset.com/), and [inD](https://www.ind-dataset.com/) were used.
-They are freely available fron non-commercial use, but does require that you apply through the links above.
+They are freely available for non-commercial use, but does require that you apply through the links above.
 
-## Data extraction 
+## Preprocessing
 
-UNDER UPDATE
+Assuming that you have been granted access to any of the above-mentioned data sets, proceed by moving the unzipped content (folder) into a folder named `data_sets` (you have to create this yourself) on the same level as this project. 
+The contents may of course be placed in any accessible location of choice but does then require modifications of the preprocessing scripts (see the head of the .py files).
+
+Methods of preprocessing are contained within python scripts. Executing them may be done from a terminal or IDE of choice, for example: 
+```bash
+python rounD_preprocess.py
+```
+
+The output of the preprocessing scripts will be sent to a sub-folder with the name of the data set within the `data` folder. 
+Each data sample refers to a traffic sequence and is given a unique index used for easy access. 
+A word of **caution**, by this approach, a lot of files are created that could be demanding for some systems.
+To make sure unsaved work is not deleted, you will be prompted on your preferred cause of action should the folders already exist: either overwriting existing data or aborting the process.
+
+*Note*: the methods of preprocessing are by no means optimized for speed or computational efficiency.
+The process could take several hours depending on the data set and available hardware. 
 
 ## License
 [Creative Commons](https://creativecommons.org/licenses/by-sa/4.0/)
