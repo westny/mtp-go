@@ -25,7 +25,6 @@ class LitEncoderDecoder(pl.LightningModule):
         self.warm_epochs = self.max_epochs // 4
         self.wta_epochs = self.max_epochs // 8
         self.annealing_epochs = int(self.max_epochs * 0.6)
-        self.compute_kde_ll = False
         self.time_update = self.ekf
         self.initial_uncertainty = 1e-5
 
@@ -282,20 +281,6 @@ class LitEncoderDecoder(pl.LightningModule):
             "test_apde": ape,
             "mr": mr
         }
-
-        if self.compute_kde_ll:
-            tv_kde_ll = kde_likelihood(all_states[ptr], all_Ps[ptr], mixture_coeffs[ptr], target[ptr],
-                                       is_tril=False, dataset=self.dataset)
-
-            tv_akde_ll = np.nanmean(-tv_kde_ll)
-            tv_fkde_ll = np.nanmean(-tv_kde_ll[:, -1])
-
-            kde_ll = {
-                "test_tv_akde_ll": tv_akde_ll,
-                "test_tv_fkde_ll": tv_fkde_ll,
-            }
-
-            results = results | kde_ll
 
         self.log_dict(results, on_epoch=True, sync_dist=True, batch_size=batch_size)
 

@@ -1,8 +1,6 @@
 import torch
 import torch.distributions as tdist
 import torch.nn as nn
-import numpy as np
-from scipy.stats import gaussian_kde
 
 
 def mask_reduce_losses(losses, mask):
@@ -13,48 +11,6 @@ def mask_reduce_losses(losses, mask):
     n_pred = torch.sum(mask, dim=0)  # (T,)
     t_losses = torch.sum(losses * mask, dim=0) / n_pred  # (T,)
     return torch.sum(t_losses)
-
-
-def kde_likelihood(mu, sigma, pi, target, is_tril=False, dataset='rounD', n_samples=50):
-    std = {'rounD': {'mean': torch.tensor([-2.8113458e-01, -5.9812081e-01]),
-                     'std': torch.tensor([18.183529, 19.054676])},
-           'highD': {'mean': torch.tensor([6.4364128e+01, -4.6085745e-01]),
-                     'std': torch.tensor([9.4793625e+01, 3.8449910e+00])}}
-
-    data_mu = std[dataset]['mean']
-    data_std = std[dataset]['std']
-
-    log_pdf_lower_bound = -20
-
-    batch_size, seq_len, *_ = mu.shape
-
-    # Create GMM
-    pi_expanded = pi.unsqueeze(1).expand(-1, mu.shape[1], -1)
-    mix = tdist.Categorical(logits=pi_expanded)
-    L = sigma if is_tril else torch.linalg.cholesky(sigma)
-    mvn = tdist.MultivariateNormal(mu, scale_tril=L)
-    gmm = tdist.MixtureSameFamily(mix, mvn)
-
-    sampled_traj = gmm.sample((n_samples,)).detach().cpu()
-    target = target.detach().cpu()
-
-    sampled_traj = (sampled_traj - data_mu) / data_std
-    target = (target - data_mu) / data_std
-
-    sampled_traj = sampled_traj.numpy()
-    target = target.numpy()
-
-    kde_ll = np.zeros((batch_size, seq_len))
-
-    for bi in range(batch_size):
-        for si in range(seq_len):
-            try:
-                kde = gaussian_kde(sampled_traj[:, bi, si].T)
-                pdf = np.clip(kde.logpdf(target[bi, si].T), a_min=log_pdf_lower_bound, a_max=None)[0]
-                kde_ll[bi, si] = pdf
-            except np.linalg.LinAlgError:
-                kde_ll[bi, si] = np.nan
-    return kde_ll
 
 
 class NLLMDNLoss(nn.Module):
