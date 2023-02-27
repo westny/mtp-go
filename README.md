@@ -3,7 +3,7 @@
 > **MTP-GO: Graph-Based Probabilistic Multi-Agent Trajectory Prediction with Neural ODEs**.
 > The paper is currectly available in preprint format on ArXiv and can be accessed [here](https://arxiv.org/abs/2302.00735).
 > All code is written using Python 3.10 using a combination of [PyTorch](https://pytorch.org/), [PyTorch Geometric](https://pytorch-geometric.readthedocs.io/en/latest/) and [PyTorch Lightning](https://pytorch-lightning.readthedocs.io/en/latest/).
-> Planned contents of this repository will be added incrementally and is underway.
+> Currently, most necessary functionality to recreate MTP-GO is availableThis repository is currently under update.
 
 
 <p align="center">
@@ -31,9 +31,30 @@ The original implementation make use of a considerable amount of data (some giga
 
 ## Usage
 
-UNDER UPDATE
+Most of the necessary building blocks to implement MTP-GO is contained within the `models` folder. 
+The main files of interest are:
+- [gru_gnn.py](models/gru_gnn.py)
+- [motion_models.py](models/motion_models.py)
+- [base_mdn.py](base_mdn.py)
 
-![](img/model.png)
+In `gru_gnn.py` the complete encoder-decoder model implementation is contained.
+This includes a custom GRU cell implementation that make use of layers based on Graph Neural Networks.
+
+In `motion_models.py` the implementations of the neural ODEs, used to learn road-user differential constraints are contained. 
+This is also where you will find functions used to perform the Jacobian calculations of the model.
+
+In this work, [pytorch-lightning](https://pytorch-lightning.readthedocs.io/en/latest/) was used to implement the training and testing behavior.
+Since most of the functionality is still implemented using pytorch, you are not restricted to using lightning, but it is recommended given the additional functionality.
+In `base_mdn.py` the lightning-based abstraction of MTP-GO is contained.
+This module is used to implement batch-wise forward and backward passes as well as to specify training and testing behavior.
+
+Assuming data is available, training a model based on MTP-GO *is as easy* as running `train.py` in an environment with the necessary libraries installed, e.g.:
+```bash
+python train.py --dataset rounD --motion-model neuralode --n-workers 8 --hidden-size 128
+```
+To learn more about the objective-scheduling algorithm described in the paper as well as the loss functions used, see [losses.py](losses.py).
+
+![Schematics of MTP-GO](img/model.png)
 
 ## Data sets
 
