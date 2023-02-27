@@ -69,12 +69,12 @@ They are freely available for non-commercial use, but does require applying for 
 Assuming that you have been granted access to any of the above-mentioned data sets, proceed by moving the unzipped content (folder) into a folder named `data_sets` (you have to create this yourself) on the same level as this project. 
 The contents may of course be placed in any accessible location of choice but does then require modifications of the preprocessing scripts (see the head of the .py files).
 
-Methods of preprocessing are contained within python scripts. Executing them may be done from a terminal or IDE of choice, for example: 
+Methods of preprocessing are contained within python scripts. Executing them may be done from a terminal or IDE of choice **(from within this project folder)**, for example: 
 ```bash
 python rounD_preprocess.py
 ```
 
-The output of the preprocessing scripts will be sent to a sub-folder with the name of the data set within the `data` folder. 
+The output of the preprocessing scripts will be sent to a sub-folder with the name of the data set within the `data` folder in this project. 
 Each data sample refers to a traffic sequence and is given a unique index used for easy access. 
 
 :exclamation: A word of **caution**, by this approach, a lot of files are created that could be demanding for some systems.
