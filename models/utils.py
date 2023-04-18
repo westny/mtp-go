@@ -19,9 +19,24 @@ class Flatten(nn.Module):
         return x
 
 
-def extract_static_features(data):
-    # Use only one-hot encoded vehicle type as static feature
-    return data.v_type  # (B, n_vehicle_types)
+def extract_static_features(data, motion_model=None):
+    if motion_model == 'singletrack':
+        wheelbase = get_wheelbase(data.dim)
+        return wheelbase
+    else:
+        # Use only one-hot encoded vehicle type as static feature
+        return data.v_type  # (B, n_vehicle_types)
+
+
+def get_wheelbase(vehicle_dim):
+    """roughly 60% of vehicle length is wheelbase
+       38 % of the wheelbase is from CoG to front axle
+       leaving 62% of the wheelbase from CoG to rear axle
+    """
+    L = vehicle_dim[:, 0] * 0.6
+    lf = L * 0.38
+    lr = L - lf
+    return torch.stack((lf, lr), dim=-1)
 
 
 activations = {

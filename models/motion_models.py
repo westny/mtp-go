@@ -1,7 +1,8 @@
+import math
 import torch
 import torch.nn as nn
 from .ode_solvers import *
-from functorch import vmap, jacrev
+from torch.func import vmap, jacrev
 
 
 class MotionModelBase(nn.Module):
@@ -165,4 +166,186 @@ class SecondOrderNeuralODE(MotionModelBase):
         dvx = self.f[0](inp_vx)
         dvy = self.f[1](inp_vy)
         dX = torch.cat((X @ self.m0, dvx, dvy), dim=-1)
+        return dX
+
+
+class KinematicSingleTrack(MotionModelBase):
+    """
+        beta = atan((lr / (lr + lf) * tan(u1)))
+        dx = v * cos(psi + beta)
+        dy = v * sin(psi + beta)
+        dv = u2
+        dpsi = v / lr * sin(beta)
+    """
+
+    def __init__(self, solver='rk4', dt=2e-1, n_states=4, mixtures=8,
+                 u1_lim=math.pi / 4, u2_lim=10):
+        super().__init__(solver, dt, n_states, mixtures, 2, u1_lim, u2_lim)
+        self.t_states = n_states - 1
+
+    def model_update(self, X, inp, static_f):
+        df = inp[..., 0]
+        dv = inp[..., 1]
+
+        lf = static_f[..., 0]
+        lr = static_f[..., 1]
+
+        beta = torch.atan((lr / (lf + lr) * torch.tan(df)))
+
+        dx = X[..., 2] * torch.cos(X[..., 3] + beta)
+        dy = X[..., 2] * torch.sin(X[..., 3] + beta)
+        dpsi = X[..., 2] * torch.sin(beta) / lr
+
+        dX = torch.stack((dx, dy, dv, dpsi), dim=-1)
+        return dX
+
+
+class Unicycle(MotionModelBase):
+    """
+        x = v * cos(psi)
+        y = v * sin(psi)
+        psi = u1
+        v = u2
+    """
+
+    def __init__(self, solver='rk4', dt=2e-1, n_states=4, mixtures=8, u1_lim=math.pi, u2_lim=10):
+        super().__init__(solver, dt, n_states, mixtures, 0, u1_lim, u2_lim)
+
+        self.t_states = n_states - 1
+
+    def model_update(self, X, u, static_f):
+        dx = X[..., 2] * torch.cos(X[..., 3])
+        dy = X[..., 2] * torch.sin(X[..., 3])
+        dpsi = u[..., 0]
+        dvx = u[..., 1]
+        return torch.stack((dx, dy, dvx, dpsi), dim=-1)
+
+
+class Curvature(MotionModelBase):
+    """
+        x = v * cos(psi)
+        y = v * sin(psi)
+        psi = u1 * v
+        v = u2
+    """
+
+    def __init__(self, solver='rk4', dt=2e-1, n_states=4, mixtures=8, u1_lim=0.5, u2_lim=10):
+        super().__init__(solver, dt, n_states, mixtures, 0, u1_lim, u2_lim)
+
+        self.t_states = n_states - 1
+
+    def model_update(self, X, u, static_f):
+        dx = X[..., 2] * torch.cos(X[..., 3])
+        dy = X[..., 2] * torch.sin(X[..., 3])
+        dpsi = u[..., 0] * X[..., 2]
+        dvx = u[..., 1]
+        return torch.stack((dx, dy, dvx, dpsi), dim=-1)
+
+
+class CurviLinear(MotionModelBase):
+    """
+        x = v * cos(psi)
+        y = v * sin(psi)
+        psi = u1 / v
+        v = u2
+    """
+
+    def __init__(self, solver='rk4', dt=2e-1, n_states=4, mixtures=8, u1_lim=10, u2_lim=8):
+        super().__init__(solver, dt, n_states, mixtures, 0, u1_lim, u2_lim)
+        self.eps = 1e-5
+        self.t_states = n_states - 1
+
+    def model_update(self, X, u, static_f):
+        dx = X[..., 2] * torch.cos(X[..., 3])
+        dy = X[..., 2] * torch.sin(X[..., 3])
+        dpsi = u[..., 0] / (X[..., 2] + self.eps)
+        dpsi = dpsi * (X[..., 2] > 1e-1)
+        dvx = u[..., 1]
+        return torch.stack((dx, dy, dvx, dpsi), dim=-1)
+
+
+class SingleIntegrator(MotionModelBase):
+    """
+        x = u1
+        y = u2
+    """
+
+    def __init__(self, solver='rk4', dt=2e-1, n_states=2, mixtures=8, u1_lim=12, u2_lim=60):
+        super().__init__(solver, dt, n_states, mixtures, 0, u1_lim, u2_lim)
+        self.m1 = nn.Parameter(torch.zeros(n_states, n_states), requires_grad=False)
+        self.m1[0, 1] = self.m1[1, 0] = 1.
+
+        self.jac_solver = solvers['ef']
+
+    def model_update(self, X, u, static_f):
+        """
+        dx = u[..., 1]
+        dy = u[..., 0]
+        """
+        dX = u @ self.m1
+        return dX
+
+
+class DoubleIntegrator(MotionModelBase):
+    """
+        x = vx
+        y = vy
+        vx = u1
+        vy = u2
+    """
+
+    def __init__(self, solver='rk4', dt=2e-1, n_states=4, mixtures=8, u1_lim=8, u2_lim=10):
+        super().__init__(solver, dt, n_states, mixtures, 0, u1_lim, u2_lim)
+        self.m0 = nn.Parameter(torch.zeros(n_states, n_states // 2), requires_grad=False)
+        self.m0[2, 0] = self.m0[3, 1] = 1.
+
+        self.m1 = nn.Parameter(torch.zeros(n_states // 2, n_states // 2), requires_grad=False)
+        self.m1[0, 1] = self.m1[1, 0] = 1.
+
+        self.jac_solver = solvers['ef']
+
+    def model_update(self, X, u, static_f):
+        """
+            dx = X[..., 2]
+            dy = X[..., 3]
+            dvx = u[..., 1]
+            dvy = u[..., 0]
+        """
+        dX = torch.cat((X @ self.m0, u @ self.m1), dim=-1)
+        return dX
+
+
+class TripleIntegrator(MotionModelBase):
+    """
+        x = vx
+        y = vy
+        vx = ax
+        vy = ay
+        ax = u2
+        ay = u1
+    """
+
+    def __init__(self, solver='rk4', dt=2e-1, n_states=6, mixtures=8, u1_lim=18, u2_lim=22):
+        super().__init__(solver, dt, n_states, mixtures, 0, u1_lim, u2_lim)
+
+        self.m0 = nn.Parameter(torch.zeros(n_states, n_states - 2), requires_grad=False)
+        self.m0[2, 0] = self.m0[3, 1] = self.m0[4, 2] = self.m0[5, 3] = 1.
+
+        self.m1 = nn.Parameter(torch.zeros(2, 2), requires_grad=False)
+        self.m1[0, 1] = self.m1[1, 0] = 1.
+
+        self.jac_solver = solvers['ef']
+
+    def model_update(self, X, u, static_f):
+        """
+        dx = X[..., 2]
+        dy = X[..., 3]
+
+        dvx = X[..., 4]
+        dvy = X[..., 5]
+
+        dax = u[..., 1]
+        day = u[..., 0]
+        """
+        dX = torch.cat((X @ self.m0, u @ self.m1), dim=-1)
         return dX

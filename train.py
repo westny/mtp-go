@@ -5,12 +5,13 @@ from argument_parser import args
 from base_mdn import *
 from datamodule import *
 from models.gru_gnn import *
-from pytorch_lightning import Trainer, seed_everything
-from pytorch_lightning.callbacks import ModelCheckpoint
-from pytorch_lightning.loggers import WandbLogger
+from lightning.pytorch import Trainer, seed_everything
+from lightning.pytorch.callbacks import ModelCheckpoint
+from lightning.pytorch.loggers import WandbLogger
 
 torch.multiprocessing.set_sharing_strategy('file_system')
 
+warnings.filterwarnings('ignore', category=UserWarning, message='TypedStorage is deprecated')
 warnings.filterwarnings("ignore", ".*Checkpoint directory*")
 
 
@@ -35,7 +36,7 @@ def main(save_name, encoder, decoder):
         callback_list.append(checkpoint_callback_NLL)
         callback_list.append(checkpoint_callback_ADE)
 
-    strategy = None
+    strategy = "auto"
     if torch.cuda.is_available() and args.use_cuda:
         devices = -1
         accelerator = "auto"
@@ -65,11 +66,17 @@ def main(save_name, encoder, decoder):
         run_name = f"{save_name}_{time.strftime('%d-%m_%H:%M:%S')}"
         logger = WandbLogger(project="mtp-go", name=run_name)
 
-    trainer = Trainer(max_epochs=args.epochs, accelerator=accelerator, devices=devices,
-                      strategy=strategy, deterministic=False,
-                      gradient_clip_val=args.clip, enable_checkpointing=args.store_data,
-                      fast_dev_run=args.dry_run, log_every_n_steps=args.log_interval,
-                      callbacks=callback_list, logger=logger)
+    trainer = Trainer(max_epochs=args.epochs,
+                      accelerator=accelerator,
+                      devices=devices,
+                      strategy=strategy,
+                      deterministic=False,
+                      gradient_clip_val=args.clip,
+                      enable_checkpointing=args.store_data,
+                      fast_dev_run=args.dry_run,
+                      log_every_n_steps=args.log_interval,
+                      callbacks=callback_list,
+                      logger=logger)
 
     trainer.fit(model, datamodule=datamodule, ckpt_path=ckpt)
 
@@ -86,25 +93,40 @@ if __name__ == "__main__":
         input_len = 3
         v_types = 4
 
-    n_features = 9
+    n_features = 8 if args.motion_model in ('singletrack', 'unicycle', 'curvature', 'curvilinear') else 9
     static_f_dim = v_types * int(args.n_ode_static)  # 0 if static not used in N-ODE
 
     dt = 2e-1
     max_l = int(input_len * (1 / dt)) + 1
 
-    if args.motion_model == 'neuralode':
-        m_model = FirstOrderNeuralODE(solver=args.ode_solver,
-                                      dt=dt,
-                                      mixtures=args.n_mixtures,
-                                      static_f_dim=static_f_dim,
-                                      n_hidden=args.n_ode_hidden,
+    # Pure integrators
+    if args.motion_model == '1Xint':
+        m_model = SingleIntegrator(solver=args.ode_solver, dt=dt, mixtures=args.n_mixtures)
+    elif args.motion_model == '2Xint':
+        m_model = DoubleIntegrator(solver=args.ode_solver, dt=dt, mixtures=args.n_mixtures)
+    elif args.motion_model == '3Xint':
+        m_model = TripleIntegrator(solver=args.ode_solver, dt=dt, mixtures=args.n_mixtures)
+
+    # Orientation-based
+    elif args.motion_model == 'singletrack':
+        m_model = KinematicSingleTrack(solver=args.ode_solver, dt=dt, mixtures=args.n_mixtures)
+        if args.init_static:
+            static_f_dim = 2
+    elif args.motion_model == 'unicycle':
+        m_model = Unicycle(solver=args.ode_solver, dt=dt, mixtures=args.n_mixtures)
+    elif args.motion_model == 'curvature':
+        m_model = Curvature(solver=args.ode_solver, dt=dt, mixtures=args.n_mixtures)
+    elif args.motion_model == 'curvilinear':
+        m_model = CurviLinear(solver=args.ode_solver, dt=dt, mixtures=args.n_mixtures, u1_lim=args.u1_lim)
+
+    # Neural ODEs
+    elif args.motion_model == 'neuralode':
+        m_model = FirstOrderNeuralODE(solver=args.ode_solver, dt=dt, mixtures=args.n_mixtures,
+                                      static_f_dim=static_f_dim, n_hidden=args.n_ode_hidden,
                                       n_layers=args.n_ode_layers)
     else:
-        m_model = SecondOrderNeuralODE(solver=args.ode_solver,
-                                       dt=dt,
-                                       mixtures=args.n_mixtures,
-                                       static_f_dim=static_f_dim,
-                                       n_hidden=args.n_ode_hidden,
+        m_model = SecondOrderNeuralODE(solver=args.ode_solver, dt=dt, mixtures=args.n_mixtures,
+                                       static_f_dim=static_f_dim, n_hidden=args.n_ode_hidden,
                                        n_layers=args.n_ode_layers)
     save_name = type(m_model).__name__
 

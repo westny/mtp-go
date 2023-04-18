@@ -36,7 +36,7 @@ parser.add_argument('--u1-lim', type=float, default=10,
 parser.add_argument('--u2-lim', type=float, default=10,
                     help='u2 control limit')
 parser.add_argument('--ode-solver', type=str, default='rk4',
-                    help='choose explicit solver')
+                    help='choose explicit solver [ef | mp | heun | rk3 | ssprk3 | rk4 | dopri5 | impl_adam]')
 parser.add_argument('--n-mixtures', type=int, default=8,
                     help='number of mixtures (default: 8)')
 parser.add_argument('--motion-model', type=str, default='2Xnode',

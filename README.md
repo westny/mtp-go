@@ -1,21 +1,36 @@
-# MTP-GO: Graph-Based Probabilistic Multi-Agent Trajectory Prediction with Neural ODEs
-> _mtp-go_ is a library containing the implementation for the paper: 
-> **MTP-GO: Graph-Based Probabilistic Multi-Agent Trajectory Prediction with Neural ODEs**.
-> The paper is currectly available in preprint format on ArXiv and can be accessed [here](https://arxiv.org/abs/2302.00735).
-> All code is written using Python 3.10 using a combination of [PyTorch](https://pytorch.org/), [PyTorch Geometric](https://pytorch-geometric.readthedocs.io/en/latest/) and [PyTorch Lightning](https://pytorch-lightning.readthedocs.io/en/latest/).
-> Currently, most necessary functionality to recreate MTP-GO is availableThis repository is currently under update.
+# Graph-Based Probabilistic Multi-Agent Trajectory Prediction with Differentially Constrained Motion Models
 
+> ### Updates
+>  *April 2023* :date:
+> - Update repository to include functionality to reproduce paper 2.
+> - Migrate code to torch==2.0.0. Update requirements.
+
+> ### Description
+> _mtp-go_ is a library containing the implementation for the papers: 
+> 1. *MTP-GO: Graph-Based Probabilistic Multi-Agent Trajectory Prediction with Neural ODEs* ([ArXiv:page_with_curl:](https://arxiv.org/abs/2302.00735))
+> 2. *Evaluation of Differentially Constrained Motion Models for Graph-Based Trajectory Prediction* ([ArXiv:page_with_curl:](https://arxiv.org/abs/2304.05116)), accepted for IEEE 2023 Intelligent Vehicles Symposium ([IV2023](https://2023.ieee-iv.org/)).
+> 
+> Both papers are available in preprint format on ArXiv by the links above.
+> All code is written using Python 3.11 using a combination of [PyTorch](https://pytorch.org/), [PyTorch Geometric](https://pytorch-geometric.readthedocs.io/en/latest/) and [PyTorch Lightning](https://pytorch-lightning.readthedocs.io/en/latest/).
 
 <p align="center">
   <img width="600" src="img/first_page.png">
 </p>
 
-##### If you found the content of this repository useful, please consider citing the paper in your work:
+##### If you found the content of this repository useful, please consider citing the papers in your work:
 ```
 @article{westny2023mtp,
 title="{MTP-GO: G}raph-Based Probabilistic Multi-Agent Trajectory Prediction with Neural {ODE}s",
 author={Westny, Theodor and Oskarsson, Joel and Olofsson, Bj{\"o}rn and Frisk, Erik},
 journal={arXiv preprint arXiv:2302.00735},
+year={2023}}
+```
+
+```
+@article{westny2023eval,
+title="Evaluation of Differentially Constrained Motion Models for Graph-Based Trajectory Prediction",
+author={Westny, Theodor and Oskarsson, Joel and Olofsson, Bj{\"o}rn and Frisk, Erik},
+journal={arXiv preprint arXiv:2304.05116},
 year={2023}}
 ```
 ***
@@ -40,7 +55,7 @@ The main files of interest are:
 In `gru_gnn.py` the complete encoder-decoder model implementation is contained.
 This includes a custom GRU cell implementation that make use of layers based on Graph Neural Networks.
 
-In `motion_models.py` the implementations of the neural ODEs, used to learn road-user differential constraints are contained. 
+In `motion_models.py` the implementations of the various motion models are contained, including the neural ODEs, used to learn road-user differential constraints. 
 This is also where you will find functions used to perform the Jacobian calculations of the model.
 
 In this work, [pytorch-lightning](https://pytorch-lightning.readthedocs.io/en/latest/) was used to implement the training and testing behavior.

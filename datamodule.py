@@ -1,5 +1,5 @@
 import torch
-import pytorch_lightning as pl
+import lightning.pytorch as pl
 from torch_geometric.loader import DataLoader
 from torch_geometric.data import Data, Dataset
 from dataclasses import dataclass
@@ -26,7 +26,7 @@ class LitDataModule(pl.LightningDataModule):
         self.small_ds = args.small_ds
         self.n_workers = args.n_workers
         self.sparse = args.sparse
-        if args.motion_model in ('none',):
+        if args.motion_model in ('singletrack', 'unicycle', 'curvature', 'curvilinear'):
             self.target = 'rotational'
         else:
             self.target = 'planar'
@@ -147,8 +147,9 @@ class TrajectoryPredictionDataset(Dataset):
             graph_target = graph_target[..., [0, 1, 3, 4, 5, 6]]  # x, y, vx, vy, ax, ay
         else:
             graph_input[..., 3] = torch.linalg.norm(graph_input[..., 3:4 + 1], dim=-1)
-            graph_input = graph_input[..., [0, 1, 2, 3, 5, 6, 7, 8]]
+            graph_input = graph_input[..., [0, 1, 3, 2, 5, 6, 7, 8]]
             graph_target[..., 3] = torch.linalg.norm(graph_target[..., 3:4 + 1], dim=-1)
+            graph_target = graph_target[..., [0, 1, 3, 2]]  # x, y, v, psi
 
             #  Static features and targets
         meta_info = torch.load(f'data/{self.root}-{self.version}/{self.mode}/meta/dat{idx}.pt')

@@ -4,10 +4,11 @@ from argument_parser import args
 from base_mdn import *
 from datamodule import *
 from models.gru_gnn import *
-from pytorch_lightning import Trainer, seed_everything
+from lightning.pytorch import Trainer, seed_everything
 
 torch.multiprocessing.set_sharing_strategy('file_system')
 
+warnings.filterwarnings('ignore', category=UserWarning, message='TypedStorage is deprecated')
 warnings.filterwarnings("ignore", ".*Consider increasing the value of the `num_workers` argument*")
 
 

@@ -1,5 +1,5 @@
 import math
-import pytorch_lightning as pl
+import lightning.pytorch as pl
 import torch.linalg
 from argparse import ArgumentParser
 from models.utils import *
@@ -75,7 +75,7 @@ class LitEncoderDecoder(pl.LightningModule):
         use_teacher_forcing = (tf_prob > 0.) and (torch.FloatTensor(
             1).uniform_(0, 1) < tf_prob)
 
-        dec_static_features = extract_static_features(data).unsqueeze(1).expand(
+        dec_static_features = extract_static_features(data, self.motion_model).unsqueeze(1).expand(
             -1, mixtures, -1)  # (B, N_mixtures, 6)
 
         # Roll out decoding
