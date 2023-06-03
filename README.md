@@ -7,7 +7,7 @@
 
 > ### Description
 > _mtp-go_ is a library containing the implementation for the papers: 
-> 1. *MTP-GO: Graph-Based Probabilistic Multi-Agent Trajectory Prediction with Neural ODEs* ([ArXiv:page_with_curl:](https://arxiv.org/abs/2302.00735))
+> 1. *MTP-GO: Graph-Based Probabilistic Multi-Agent Trajectory Prediction with Neural ODEs* ([ArXiv:page_with_curl:](https://arxiv.org/abs/2302.00735)), accepted for IEEE Transactions on Intelligent Vehicles ([TIV](https://ieeexplore.ieee.org/document/10143287)).
 > 2. *Evaluation of Differentially Constrained Motion Models for Graph-Based Trajectory Prediction* ([ArXiv:page_with_curl:](https://arxiv.org/abs/2304.05116)), accepted for IEEE 2023 Intelligent Vehicles Symposium ([IV2023](https://2023.ieee-iv.org/)).
 > 
 > Both papers are available in preprint format on ArXiv by the links above.
@@ -19,19 +19,23 @@
 
 ##### If you found the content of this repository useful, please consider citing the papers in your work:
 ```
-@article{westny2023mtp,
-title="{MTP-GO: G}raph-Based Probabilistic Multi-Agent Trajectory Prediction with Neural {ODE}s",
-author={Westny, Theodor and Oskarsson, Joel and Olofsson, Bj{\"o}rn and Frisk, Erik},
-journal={arXiv preprint arXiv:2302.00735},
-year={2023}}
+@article{westny2023mtpgo,
+  title="{MTP-GO}: Graph-Based Probabilistic Multi-Agent Trajectory Prediction with Neural {ODEs}",
+  author={Westny, Theodor and Oskarsson, Joel and Olofsson, Bj{\"o}rn and Frisk, Erik},
+  journal={IEEE Transactions on Intelligent Vehicles},
+  year={2023},
+  publisher={IEEE}
+}
 ```
 
 ```
-@article{westny2023eval,
-title="Evaluation of Differentially Constrained Motion Models for Graph-Based Trajectory Prediction",
-author={Westny, Theodor and Oskarsson, Joel and Olofsson, Bj{\"o}rn and Frisk, Erik},
-journal={arXiv preprint arXiv:2304.05116},
-year={2023}}
+@inproceedings{westny2023eval,
+  title={Evaluation of Differentially Constrained Motion Models for Graph-Based Trajectory Prediction},
+  author={Westny, Theodor and Oskarsson, Joel and Olofsson, Bj{\"o}rn and Frisk, Erik},
+  booktitle={IEEE Intelligent Vehicles Symposium (IV)},
+  pages={},
+  year={2023},
+}
 ```
 ***
 
