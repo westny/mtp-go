@@ -24,8 +24,11 @@
   author={Westny, Theodor and Oskarsson, Joel and Olofsson, Bj{\"o}rn and Frisk, Erik},
   journal={IEEE Transactions on Intelligent Vehicles},
   year={2023},
-  publisher={IEEE}
-}
+  volume={},
+  number={},
+  pages={},
+  doi={10.1109/TIV.2023.3282308}}
+} 
 ```
 
 ```
