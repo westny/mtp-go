@@ -7,26 +7,26 @@
 
 > ### Description
 > _mtp-go_ is a library containing the implementation for the papers: 
-> 1. *MTP-GO: Graph-Based Probabilistic Multi-Agent Trajectory Prediction with Neural ODEs* ([ArXiv:page_with_curl:](https://arxiv.org/abs/2302.00735)), accepted for IEEE Transactions on Intelligent Vehicles ([TIV](https://ieeexplore.ieee.org/document/10143287)).
-> 2. *Evaluation of Differentially Constrained Motion Models for Graph-Based Trajectory Prediction* ([ArXiv:page_with_curl:](https://arxiv.org/abs/2304.05116)), accepted for IEEE 2023 Intelligent Vehicles Symposium ([IV2023](https://2023.ieee-iv.org/)).
+> 1. *MTP-GO: Graph-Based Probabilistic Multi-Agent Trajectory Prediction with Neural ODEs* ([ArXiv:page_with_curl:](https://arxiv.org/abs/2302.00735)), published in IEEE Transactions on Intelligent Vehicles ([TIV](https://ieeexplore.ieee.org/document/10143287)).
+> 2. *Evaluation of Differentially Constrained Motion Models for Graph-Based Trajectory Prediction* ([ArXiv:page_with_curl:](https://arxiv.org/abs/2304.05116)), published in proceedings of IEEE 2023 Intelligent Vehicles Symposium ([IV2023](https://2023.ieee-iv.org/)).
 > 
 > Both papers are available in preprint format on ArXiv by the links above.
 > All code is written using Python 3.11 using a combination of [PyTorch](https://pytorch.org/), [PyTorch Geometric](https://pytorch-geometric.readthedocs.io/en/latest/) and [PyTorch Lightning](https://pytorch-lightning.readthedocs.io/en/latest/).
 
 <p align="center">
-  <img width="600" src="img/first_page.png">
+  <img width="600" src="img/1st_pg.png">
 </p>
 
 ##### If you found the content of this repository useful, please consider citing the papers in your work:
 ```
-@article{westny2023mtpgo,
+@article{westny2023mtp,
   title="{MTP-GO}: Graph-Based Probabilistic Multi-Agent Trajectory Prediction with Neural {ODEs}",
   author={Westny, Theodor and Oskarsson, Joel and Olofsson, Bj{\"o}rn and Frisk, Erik},
   journal={IEEE Transactions on Intelligent Vehicles},
   year={2023},
-  volume={},
-  number={},
-  pages={},
+  volume={8},
+  number={9},
+  pages={4223-4236},
   doi={10.1109/TIV.2023.3282308}}
 } 
 ```
@@ -38,6 +38,7 @@
   booktitle={IEEE Intelligent Vehicles Symposium (IV)},
   pages={},
   year={2023},
+  doi={10.1109/IV55152.2023.10186615}
 }
 ```
 ***
