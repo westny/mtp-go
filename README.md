@@ -7,8 +7,8 @@
 
 > ### Description
 > _mtp-go_ is a library containing the implementation for the papers: 
-> 1. *MTP-GO: Graph-Based Probabilistic Multi-Agent Trajectory Prediction with Neural ODEs* ([ArXiv:page_with_curl:](https://arxiv.org/abs/2302.00735)), published in IEEE Transactions on Intelligent Vehicles ([TIV](https://ieeexplore.ieee.org/document/10143287)).
-> 2. *Evaluation of Differentially Constrained Motion Models for Graph-Based Trajectory Prediction* ([ArXiv:page_with_curl:](https://arxiv.org/abs/2304.05116)), published in proceedings of IEEE 2023 Intelligent Vehicles Symposium ([IV2023](https://2023.ieee-iv.org/)).
+> 1. *MTP-GO: Graph-Based Probabilistic Multi-Agent Trajectory Prediction with Neural ODEs* ([ArXiv](https://arxiv.org/abs/2302.00735)), published in IEEE Transactions on Intelligent Vehicles ([TIV](https://ieeexplore.ieee.org/document/10143287)).
+> 2. *Evaluation of Differentially Constrained Motion Models for Graph-Based Trajectory Prediction* ([ArXiv](https://arxiv.org/abs/2304.05116)), published in proceedings of IEEE 2023 Intelligent Vehicles Symposium ([IV2023](https://ieeexplore.ieee.org/document/10186615)).
 > 
 > Both papers are available in preprint format on ArXiv by the links above.
 > All code is written using Python 3.11 using a combination of [PyTorch](https://pytorch.org/), [PyTorch Geometric](https://pytorch-geometric.readthedocs.io/en/latest/) and [PyTorch Lightning](https://pytorch-lightning.readthedocs.io/en/latest/).
