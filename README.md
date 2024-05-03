@@ -17,10 +17,10 @@
 > Both papers are available in preprint format on ArXiv by the links above.
 > All code is written using Python 3.11 using a combination of [<img alt="Pytorch logo" src=https://github.com/westny/mtp-go/assets/60364134/a416cd27-802c-454d-b25c-ac4d520927b1 height="12">PyTorch](https://pytorch.org/docs/stable/index.html), [<img alt="PyG logo" src=https://github.com/westny/mtp-go/assets/60364134/fad91e36-c94a-4fd7-bb33-943cff9c5430 height="12">PyTorch Geometric](https://pytorch-geometric.readthedocs.io/en/latest/), and [<img alt="Lightning logo" src=https://github.com/westny/mtp-go/assets/60364134/5e57cab7-88a9-4cb8-a17d-aa0941ec384f height="16">PyTorch Lightning](https://lightning.ai/docs/pytorch/stable/).
 
+<div align="center">
+  <img alt="First page figure" src=https://github.com/westny/mtp-go/assets/60364134/5cb0ec14-79e8-491b-9d38-f536dce78c55 width="600px" style="max-width: 100%;">
+</div>
 
-<p align="center">
-  <img width="600" src="img/1st_pg.png">
-</p>
 
 ##### If you found the content of this repository useful, please consider citing the papers in your work:
 ```
@@ -82,14 +82,19 @@ python train.py --dataset rounD --motion-model neuralode --n-workers 8 --hidden-
 ```
 To learn more about the objective-scheduling algorithm described in the paper as well as the loss functions used, see [losses.py](losses.py).
 
-![Schematics of MTP-GO](img/model.png)
+<div align="center">
+  <img alt="Schematics of MTP-GO" src=https://github.com/westny/mtp-go/assets/60364134/4f30cf04-db78-470c-aae0-c50c468afe04 width="800px" style="max-width: 100%;">
+</div>
+
 
 ## Data sets
 
 For model training and evaluation, the [highD](https://www.highd-dataset.com/), [rounD](https://www.round-dataset.com/), and [inD](https://www.ind-dataset.com/) were used. The data sets contain recorded trajectories from different locations in Germany, including various highways, roundabouts, and intersections. The data includes several hours of naturalistic driving data recorded at 25 Hz of considerable quality.
 They are freely available for non-commercial use but do require applying for usage through the links above.
 
-![round2](https://user-images.githubusercontent.com/60364134/220960422-4e7d7e13-c9b3-42af-99d3-a61eb6406e1e.gif)
+<div align="center">
+  <img src=https://user-images.githubusercontent.com/60364134/220960422-4e7d7e13-c9b3-42af-99d3-a61eb6406e1e.gif alt="rounD.gif">
+</div>
 
 
 ## Preprocessing
