@@ -1,17 +1,22 @@
 # Graph-Based Probabilistic Multi-Agent Trajectory Prediction with Differentially Constrained Motion Models
 
-> ### Updates
+> ### Announcements
+>  *May 2024* :date:
+>  - We have just released a [toolbox](https://arxiv.org/abs/2405.00604) designed for trajectory-prediction research on the **D**rone datasets!
+>  - It is made completely open-source here on [GitHub](https://github.com/westny/dronalize). Make sure to check it out. 
+> 
 >  *April 2023* :date:
 > - Update repository to include functionality to reproduce paper 2.
 > - Migrate code to torch==2.0.0. Update requirements.
 
 > ### Description
-> _mtp-go_ is a library containing the implementation for the papers: 
-> 1. *MTP-GO: Graph-Based Probabilistic Multi-Agent Trajectory Prediction with Neural ODEs* ([ArXiv](https://arxiv.org/abs/2302.00735)), published in IEEE Transactions on Intelligent Vehicles ([TIV](https://ieeexplore.ieee.org/document/10143287)).
-> 2. *Evaluation of Differentially Constrained Motion Models for Graph-Based Trajectory Prediction* ([ArXiv](https://arxiv.org/abs/2304.05116)), published in proceedings of IEEE 2023 Intelligent Vehicles Symposium ([IV2023](https://ieeexplore.ieee.org/document/10186615)).
+> `mtp-go` is a library containing the implementation for the papers: 
+> 1. *MTP-GO: Graph-Based Probabilistic Multi-Agent Trajectory Prediction with Neural ODEs* ([arXiv](https://arxiv.org/abs/2302.00735)), published in IEEE Transactions on Intelligent Vehicles ([TIV](https://ieeexplore.ieee.org/document/10143287)).
+> 2. *Evaluation of Differentially Constrained Motion Models for Graph-Based Trajectory Prediction* ([arXiv](https://arxiv.org/abs/2304.05116)), published in proceedings of IEEE 2023 Intelligent Vehicles Symposium ([IV 2023](https://ieeexplore.ieee.org/document/10186615)).
 > 
 > Both papers are available in preprint format on ArXiv by the links above.
-> All code is written using Python 3.11 using a combination of [PyTorch](https://pytorch.org/), [PyTorch Geometric](https://pytorch-geometric.readthedocs.io/en/latest/) and [PyTorch Lightning](https://pytorch-lightning.readthedocs.io/en/latest/).
+> All code is written using Python 3.11 using a combination of [<img alt="Pytorch logo" src=https://github.com/westny/mtp-go/assets/60364134/a416cd27-802c-454d-b25c-ac4d520927b1 height="12">PyTorch](https://pytorch.org/docs/stable/index.html), [<img alt="PyG logo" src=https://github.com/westny/mtp-go/assets/60364134/fad91e36-c94a-4fd7-bb33-943cff9c5430 height="12">PyTorch Geometric](https://pytorch-geometric.readthedocs.io/en/latest/), and [<img alt="Lightning logo" src=https://github.com/westny/mtp-go/assets/60364134/5e57cab7-88a9-4cb8-a17d-aa0941ec384f height="16">PyTorch Lightning](https://lightning.ai/docs/pytorch/stable/).
+
 
 <p align="center">
   <img width="600" src="img/1st_pg.png">
@@ -66,8 +71,8 @@ This includes a custom GRU cell implementation that make use of layers based on 
 In `motion_models.py` the implementations of the various motion models are contained, including the neural ODEs, used to learn road-user differential constraints. 
 This is also where you will find functions used to perform the Jacobian calculations of the model.
 
-In this work, [pytorch-lightning](https://pytorch-lightning.readthedocs.io/en/latest/) was used to implement the training and testing behavior.
-Since most of the functionality is still implemented using pytorch, you are not restricted to using lightning, but it is recommended given the additional functionality.
+In this work, [<img alt="Lightning logo" src=https://github.com/westny/mtp-go/assets/60364134/5e57cab7-88a9-4cb8-a17d-aa0941ec384f height="16">PyTorch Lightning](https://lightning.ai/docs/pytorch/stable/) was used to implement the training and testing behavior.
+Since most of the functionality is still implemented using [<img alt="Pytorch logo" src=https://github.com/westny/mtp-go/assets/60364134/a416cd27-802c-454d-b25c-ac4d520927b1 height="12">PyTorch](https://pytorch.org/docs/stable/index.html), you are not restricted to using lightning, but it is recommended given the additional functionality.
 In `base_mdn.py` the lightning-based abstraction of MTP-GO is contained.
 This module is used to implement batch-wise forward and backward passes as well as to specify training and testing behavior.
 
@@ -82,7 +87,7 @@ To learn more about the objective-scheduling algorithm described in the paper as
 ## Data sets
 
 For model training and evaluation, the [highD](https://www.highd-dataset.com/), [rounD](https://www.round-dataset.com/), and [inD](https://www.ind-dataset.com/) were used. The data sets contain recorded trajectories from different locations in Germany, including various highways, roundabouts, and intersections. The data includes several hours of naturalistic driving data recorded at 25 Hz of considerable quality.
-They are freely available for non-commercial use, but does require applying for usage through the links above.
+They are freely available for non-commercial use but do require applying for usage through the links above.
 
 ![round2](https://user-images.githubusercontent.com/60364134/220960422-4e7d7e13-c9b3-42af-99d3-a61eb6406e1e.gif)
 
@@ -90,9 +95,9 @@ They are freely available for non-commercial use, but does require applying for 
 ## Preprocessing
 
 Assuming that you have been granted access to any of the above-mentioned data sets, proceed by moving the unzipped content (folder) into a folder named `data_sets` (you have to create this yourself) on the same level as this project. 
-The contents may of course be placed in any accessible location of choice but does then require modifications of the preprocessing scripts (see the head of the .py files).
+The contents may of course be placed in any accessible location of choice but do then require modifications of the preprocessing scripts (see the head of the .py files).
 
-Methods of preprocessing are contained within python scripts. Executing them may be done from a terminal or IDE of choice **(from within this project folder)**, for example: 
+Methods of preprocessing are contained within Python scripts. Executing them may be done from a terminal or IDE of choice **(from within this project folder)**, for example: 
 ```bash
 python rounD_preprocess.py
 ```
